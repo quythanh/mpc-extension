@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/mpc-ou/mpc-extension/compare/v1.4.1...v1.5.0) (2026-02-17)
+
+
+### Features
+
+* add training point (close [#49](https://github.com/mpc-ou/mpc-extension/issues/49)) ([882a0e3](https://github.com/mpc-ou/mpc-extension/commit/882a0e3d56862b3ff9a23a02ca5e27c45b937438))
+
 ## [1.4.1](https://github.com/mpc-ou/mpc-extension/compare/v1.4.0...v1.4.1) (2026-02-05)
 
 
