@@ -142,7 +142,7 @@ const PointTab = () => {
     getOldData();
   }, [getData]);
 
-  const handleSemesterSubmit = (semesterName: string) => {
+  const handleSemesterSubmit = (semesterName: string, trainingPoint: number | null) => {
     const newPointData = [...scores];
 
     if (semesterDialog.mode === "add") {
@@ -151,11 +151,13 @@ const PointTab = () => {
         data: [],
         id: newPointData.length > 0 ? Math.max(...newPointData.map((item) => item.id)) + 1 : 1,
         totalCredit: 0,
+        trainingPoint,
         avgPoint: { scale10: null, scale4: null }
       });
       toast.success("Thêm học kỳ thành công!");
     } else if (semesterDialog.semesterIdx !== undefined) {
       newPointData[semesterDialog.semesterIdx].title = semesterName;
+      newPointData[semesterDialog.semesterIdx].trainingPoint = trainingPoint;
       toast.success("Cập nhật học kỳ thành công!");
     }
 
@@ -305,6 +307,9 @@ const PointTab = () => {
           <div className='rounded-lg border bg-card p-4 shadow-sm'>
             <div className='mb-1 text-muted-foreground text-xs'>Tổng tín chỉ</div>
             <div className='font-bold text-2xl text-primary'>{summary.totalCredit}</div>
+            <div className='mt-1 text-muted-foreground text-sm'>
+              ĐRL TB: <b>{summary.avgTrainingPoint.toFixed(fixedPoint)}</b>
+            </div>
           </div>
         </div>
 
@@ -352,6 +357,11 @@ const PointTab = () => {
       </Activity>
 
       <FormSemesterDialog
+        initialTrainingPoint={
+          semesterDialog.mode === "edit" && semesterDialog.semesterIdx !== undefined
+            ? (scores[semesterDialog.semesterIdx]?.trainingPoint ?? null)
+            : null
+        }
         initialValue={
           semesterDialog.mode === "edit" && semesterDialog.semesterIdx !== undefined
             ? scores[semesterDialog.semesterIdx]?.title || ""

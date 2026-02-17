@@ -1,9 +1,7 @@
 import { PointCharacterType, ScoreGroupType } from "../type";
 
 const getPointData = () => {
-  const tableRows = document.querySelectorAll(
-    "table#excel-table > tbody > tr.ng-star-inserted:not(.table-primary), table#excel-table > tbody > tr.text-center.ng-star-inserted"
-  );
+  const tableRows = document.querySelectorAll("table#excel-table > tbody > tr");
 
   const data: ScoreGroupType[] = [];
 
@@ -18,6 +16,7 @@ const getPointData = () => {
         title: columns[0].innerText,
         data: [],
         totalCredit: 0,
+        trainingPoint: null,
         avgPoint: {
           scale10: 0,
           scale4: 0
@@ -26,18 +25,30 @@ const getPointData = () => {
     }
 
     if (!isHead) {
-      const character = columns[11].innerText as PointCharacterType;
+      const isOverviewRow = row.classList.contains("table-primary");
 
-      data.at(-1)?.data.push({
-        code: columns[1].innerText,
-        name: columns[3].innerText,
-        credit: Number.parseFloat(columns[4].innerText) || 0,
-        point: {
-          scale10: Number.parseFloat(columns[9].innerText),
-          scale4: Number.parseFloat(columns[10].innerText),
-          character
+      if (isOverviewRow) {
+        const overviewE = row.querySelector(".row table:first-child tr:nth-child(3) td:last-child") as HTMLElement;
+        const trainingPoint = Number.parseInt(overviewE.innerText, 10);
+
+        const lastGroup = data.at(-1);
+        if (lastGroup) {
+          lastGroup.trainingPoint = trainingPoint;
         }
-      });
+      } else {
+        const character = columns[11].innerText as PointCharacterType;
+
+        data.at(-1)?.data.push({
+          code: columns[1].innerText,
+          name: columns[3].innerText,
+          credit: Number.parseFloat(columns[4].innerText) || 0,
+          point: {
+            scale10: Number.parseFloat(columns[9].innerText),
+            scale4: Number.parseFloat(columns[10].innerText),
+            character
+          }
+        });
+      }
     }
   });
 
