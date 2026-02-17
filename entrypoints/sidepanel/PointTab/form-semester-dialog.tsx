@@ -14,35 +14,48 @@ import { Label } from "@/components/ui/label";
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  onSubmit: (semesterName: string) => void;
+  onSubmit: (semesterName: string, trainingPoint: number | null) => void;
   initialValue: string;
+  initialTrainingPoint?: number | null;
   mode?: "add" | "edit";
 };
 
-export const FormSemesterDialog = ({ open, onOpenChange, onSubmit, initialValue, mode = "add" }: Props) => {
+export const FormSemesterDialog = ({
+  open,
+  onOpenChange,
+  onSubmit,
+  initialValue,
+  initialTrainingPoint,
+  mode = "add"
+}: Props) => {
   const [semesterName, setSemesterName] = useState(initialValue);
+  const [trainingPoint, setTrainingPoint] = useState<number | null>(initialTrainingPoint ?? null);
 
   useEffect(() => {
     if (open) {
       setSemesterName(initialValue);
+      setTrainingPoint(initialTrainingPoint ?? null);
     }
-  }, [open, initialValue]);
+  }, [open, initialValue, initialTrainingPoint]);
 
   const handleSubmit = () => {
     const trimmedName = semesterName.trim();
     if (!trimmedName) {
       return;
     }
-    onSubmit(trimmedName);
+    onSubmit(trimmedName, trainingPoint);
     setSemesterName("Học kỳ mới");
+    setTrainingPoint(null);
   };
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{mode === "add" ? "Thêm học kỳ mới" : "Sửa tên học kỳ"}</DialogTitle>
-          <DialogDescription>{mode === "add" ? "Nhập tên cho học kỳ mới" : "Cập nhật tên học kỳ"}</DialogDescription>
+          <DialogTitle>{mode === "add" ? "Thêm học kỳ mới" : "Sửa thông tin học kỳ"}</DialogTitle>
+          <DialogDescription>
+            {mode === "add" ? "Nhập thông tin cho học kỳ mới" : "Cập nhật thông tin học kỳ"}
+          </DialogDescription>
         </DialogHeader>
         <div className='space-y-4 py-4'>
           <div className='space-y-2'>
@@ -52,6 +65,21 @@ export const FormSemesterDialog = ({ open, onOpenChange, onSubmit, initialValue,
               onChange={(e) => setSemesterName(e.target.value)}
               placeholder='Học kỳ mới'
               value={semesterName}
+            />
+          </div>
+          <div className='space-y-2'>
+            <Label htmlFor='training-point'>Điểm rèn luyện</Label>
+            <Input
+              id='training-point'
+              max='100'
+              min='0'
+              onChange={(e) => {
+                const value = e.target.value;
+                setTrainingPoint(value === "" ? null : Number(value));
+              }}
+              placeholder='VD: 80'
+              type='number'
+              value={trainingPoint ?? ""}
             />
           </div>
         </div>

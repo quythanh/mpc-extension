@@ -180,7 +180,7 @@ const DataTable = ({
                 <div className='font-semibold'>{semester.title}</div>
                 <div className='text-muted-foreground text-sm'>
                   Hệ 10: {semester.avgPoint.scale10?.toFixed(fixedPoint) || "---"} - Hệ 4:{" "}
-                  {semester.avgPoint.scale4?.toFixed(fixedPoint) || "---"}
+                  {semester.avgPoint.scale4?.toFixed(fixedPoint) || "---"} - ĐRL: {semester.trainingPoint ?? "---"}
                 </div>
               </div>
               <div className='flex items-center gap-2'>

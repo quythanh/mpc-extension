@@ -26,6 +26,7 @@ export type ScoreGroupType = {
   title: string;
   data: ScoreRecordType[];
   totalCredit: number;
+  trainingPoint: number | null;
   avgPoint: {
     scale10: number | null;
     scale4: number | null;
@@ -43,6 +44,7 @@ export type ScoreSummaryType = {
   totalCredit: number;
   gpa10: number;
   gpa4: number;
+  avgTrainingPoint: number;
 };
 
 export type PointStorageType = {
