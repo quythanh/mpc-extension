@@ -4,6 +4,7 @@ import {
   Legend,
   LinearScale,
   LineElement,
+  type Plugin,
   PointElement,
   Title,
   Tooltip
@@ -11,6 +12,21 @@ import {
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import { Line } from "react-chartjs-2";
 import { StatisticDataType } from "@/entrypoints/sidepanel/StatisticTab/type";
+
+const legendMarginPlugin: Plugin = {
+  id: "legendMargin",
+  beforeInit(chart) {
+    const legend = chart.legend;
+    if (!legend) {
+      return;
+    }
+    const originalFit = legend.fit.bind(legend);
+    legend.fit = function () {
+      originalFit();
+      this.height += 16;
+    };
+  }
+};
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Title, ChartDataLabels);
 
@@ -55,23 +71,38 @@ const SemesterAverageChart = ({ statistic, fixedPoint }: Props) => {
 
   const options = {
     responsive: true,
+    layout: {
+      padding: {
+        top: 20,
+        left: 20,
+        right: 20,
+        bottom: 20
+      }
+    },
     plugins: {
       title: {
         display: true,
         text: "ĐIỂM TRUNG BÌNH QUA TỪNG HỌC KỲ",
         font: { size: 15 }
       },
+
       datalabels: datalabelsOptions
     },
     scales: {
       x: { ticks: { display: false } },
-      y: { beginAtZero: true, ticks: { display: true } }
+      y: {
+        beginAtZero: true,
+        ticks: {
+          display: true,
+          padding: 20
+        }
+      }
     }
   };
 
   return (
-    <div>
-      <Line data={data} options={options} />
+    <div className='min-h-50'>
+      <Line data={data} options={options} plugins={[legendMarginPlugin]} />
     </div>
   );
 };
